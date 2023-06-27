@@ -19,9 +19,10 @@ export default function Register() {
         console.log(res);
         setMessage("Could not login");
       } else {
-        const body = await res.json();
-        console.log(body);
-        // router.push("/");
+        const data = await res.json();
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("token", data.token);
+        router.push("/pantry");
       }
     } catch (err) {
       setMessage("Sorry, something went wrong");

@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       }
       const token = user.createJWT();
 
-      return res.status(200).json({ user: { name: user.name }, token });
+      return res.status(200).json({ userId: user._id, token });
     default:
       return res.status(400).json({ success: false });
   }
