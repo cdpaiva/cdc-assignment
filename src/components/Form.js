@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Form = ({ postData, message }) => {
+const Form = ({ postData }) => {
   const [errors, setErrors] = useState({});
 
   const [form, setForm] = useState({
@@ -116,7 +116,6 @@ const Form = ({ postData, message }) => {
           Add new item
         </button>
       </form>
-      {/* <p>{message}</p> */}
       <div>
         {Object.keys(errors).map((err, index) => (
           <li key={index}>{err}</li>
