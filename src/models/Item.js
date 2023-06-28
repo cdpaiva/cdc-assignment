@@ -11,7 +11,7 @@ const ItemSchema = new mongoose.Schema({
   },
   amount: {
     type: Number,
-    default: 0,
+    default: 1,
   },
   category: {
     type: String,

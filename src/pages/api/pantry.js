@@ -1,9 +1,11 @@
 import Item from "@/models/Item";
 import jwt from "jsonwebtoken";
 
-// import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbConnect";
 
 export default async function handler(req, res) {
+  await dbConnect();
+
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw new UnauthenticatedError("Authentication Invalid");
@@ -25,6 +27,7 @@ export default async function handler(req, res) {
         res.status(200).json({ success: true, data: items });
         return;
       } catch (error) {
+        console.log(error);
         res.status(400).json({ success: false, error: error });
         return;
       }

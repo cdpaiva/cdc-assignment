@@ -116,7 +116,7 @@ const Form = ({ postData, message }) => {
           Add new item
         </button>
       </form>
-      <p>{message}</p>
+      {/* <p>{message}</p> */}
       <div>
         {Object.keys(errors).map((err, index) => (
           <li key={index}>{err}</li>
