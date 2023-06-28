@@ -3,6 +3,7 @@ import dbConnect from "../../../lib/dbConnect";
 import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
+  await dbConnect();
   console.log(req.query);
   const {
     query: { id },
