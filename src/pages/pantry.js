@@ -130,6 +130,28 @@ function Pantry() {
     setItems(newItems);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`/api/pantry/${id}`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(res.status);
+      }
+      const newItems = items.filter((i) => i._id !== id);
+      setItems(newItems);
+    } catch (error) {
+      console.error(error);
+      setMessage(error);
+    }
+  };
+
   return (
     <main>
       {notification && <p>{notification}</p>}
@@ -143,8 +165,9 @@ function Pantry() {
               <tr>
                 <th className="border border-slate-700 p-2">Item</th>
                 <th className="border border-slate-700 p-2">Quantity</th>
-                <th className="border border-slate-700 p-2">Add Item</th>
-                <th className="border border-slate-700 p-2">Remove Item</th>
+                <th className="border border-slate-700 p-2">Add One</th>
+                <th className="border border-slate-700 p-2">Subtract One</th>
+                <th className="border border-slate-700 p-2">Delete Item</th>
               </tr>
             </thead>
             {items && items.length ? (
@@ -167,6 +190,14 @@ function Pantry() {
                         onClick={() => handleSubtract(i._id)}
                       >
                         -
+                      </button>
+                    </td>
+                    <td className="border border-slate-700 p-2 text-center">
+                      <button
+                        className="rounded-full bg-red-400 px-4 text-lg hover:bg-red-600"
+                        onClick={() => handleDelete(i._id)}
+                      >
+                        X
                       </button>
                     </td>
                   </tr>
