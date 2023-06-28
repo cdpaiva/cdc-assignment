@@ -1,6 +1,14 @@
 import Form from "@/components/Form";
 import Router from "next/router";
 import { useEffect, useState } from "react";
+import Notification from "@/components/Notification";
+import {
+  getAllItems,
+  createNewItem,
+  updateItem,
+  sendMail,
+  deleteItem,
+} from "@/lib/pantryService";
 
 function Pantry() {
   const [items, setItems] = useState([]);
@@ -8,6 +16,7 @@ function Pantry() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -16,62 +25,32 @@ function Pantry() {
       Router.push("/login");
     }
     setToken(token);
-    fetch("/api/pantry", {
-      method: "GET",
-      headers: { authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
+
+    getAllItems(token)
       .then((data) => {
         setLoading(false);
         setItems(data.data);
-      });
+      })
+      .catch((err) =>
+        setNotification("Could not get your data, please try again")
+      );
   }, []);
 
-  const postData = async (form) => {
+  const postData = async (newItem) => {
     try {
-      const res = await fetch("/api/pantry", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(form),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.status);
-      }
-      const data = await res.json();
+      await createNewItem(token, newItem);
 
       setItems(items.concat(data.data));
     } catch (error) {
-      console.log(error);
-      setMessage(error);
+      setError("Failed to create a new item. Try again later.");
     }
   };
 
   const putData = async (id, amount) => {
     try {
-      const res = await fetch(`/api/pantry/${id}`, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ amount }),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.status);
-      }
-
-      const { data } = await res.json();
-      console.log(data);
+      await updateItem(id, token, amount);
     } catch (error) {
-      console.error(error);
-      setMessage(error);
+      setError("Failed to update the item. Try again later.");
     }
   };
 
@@ -90,35 +69,21 @@ function Pantry() {
 
   const handleSubtract = async (id) => {
     const item = items.find((i) => i._id === id);
+    if (item.amount === 0) {
+      return;
+    }
+
     if (item.amount === 1) {
       try {
-        const res = await fetch(`/api/sendgrid`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ product: item.name }),
-        });
-
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-
-        const { data } = await res.json();
-        console.log(data);
+        await sendMail(token, item.name);
       } catch (error) {
-        console.error(error);
-        setMessage(error);
+        setError("Failed to send an e-mail notification. Try again later.");
       }
       setNotification(
         "You went short of a product. We've just mailed you about it."
       );
     }
-    if (item.amount === 0) {
-      return;
-    }
+
     putData(item._id, item.amount - 1);
     const newItems = items.map((i) => {
       if (i._id === id) {
@@ -132,29 +97,26 @@ function Pantry() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`/api/pantry/${id}`, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(res.status);
-      }
+      await deleteItem("token", id);
       const newItems = items.filter((i) => i._id !== id);
       setItems(newItems);
     } catch (error) {
-      console.error(error);
-      setMessage(error);
+      setError("Failed to delete the item. Try again later.");
     }
   };
 
   return (
     <main>
-      {notification && <p>{notification}</p>}
+      {notification && (
+        <Notification
+          text={notification}
+          setter={setNotification}
+          variant="info"
+        />
+      )}
+      {error && (
+        <Notification text={error} setter={setError} variant="danger" />
+      )}
       <h1>Pantry Organizer</h1>
       {loading ? (
         <div>Loading...</div>
@@ -207,7 +169,7 @@ function Pantry() {
           </table>
           <div className="container mx-auto mt-4 bg-white shadow-md rounded p-6">
             <h3>New Product</h3>
-            <Form postData={postData} message={message} />
+            <Form postData={postData} />
           </div>
         </>
       )}
