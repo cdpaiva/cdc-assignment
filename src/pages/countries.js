@@ -1,4 +1,5 @@
 import Nav from "@/components/Nav";
+import { useState } from "react";
 
 export const getServerSideProps = async () => {
   const options = {
@@ -12,16 +13,27 @@ export const getServerSideProps = async () => {
   const offset = Math.floor(Math.random() * 198);
 
   const res = await fetch(
-    `https://wft-geo-db.p.rapidapi.com/v1/geo/countries?offset=${offset}`,
+    `https://wft-geo-db.p.rapidapi.com/v1/geo/countries?limit=8&offset=${offset}`,
     options
   );
   const countries = await res.json();
-  return { props: { countries } };
+  return { props: { data: countries.data } };
 };
 
-export default function Page({ countries }) {
-  console.log(countries.data);
-  console.log("first render");
+export default function Page({ data }) {
+  const [countries, setCountries] = useState(data);
+
+  const handleSortAsc = () => {
+    const sortedCountries = [...countries];
+    sortedCountries.sort((a, b) => a.name > b.name);
+    setCountries(sortedCountries);
+  };
+
+  const handleSortDesc = () => {
+    const sortedCountries = [...countries];
+    sortedCountries.sort((a, b) => a.name < b.name);
+    setCountries(sortedCountries);
+  };
 
   return (
     <>
@@ -30,7 +42,22 @@ export default function Page({ countries }) {
         <h1 className="text-2xl font-bold text-green-500 my-4 text-center">
           List of countries
         </h1>
-        {countries.data.map((country) => (
+        <div className="border border-slate-600 inline-block p-2">
+          Sort by country name:
+          <button
+            onClick={handleSortAsc}
+            className="bg-slate-600 text-white rounded px-3 py-2 m-2 hover:text-green-500"
+          >
+            ASC
+          </button>
+          <button
+            onClick={handleSortDesc}
+            className="bg-slate-600 text-white rounded px-3 py-2 m-2 hover:text-green-500"
+          >
+            DESC
+          </button>
+        </div>
+        {countries.map((country) => (
           <div key={country.code} className="flex flex-col items-center mb-4">
             <p className="text-left">{`${country.code} - ${country.name}`}</p>
             <p>Currency code: {country.currencyCodes[0]}</p>
