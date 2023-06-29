@@ -1,8 +1,6 @@
 import { useState } from "react";
 
 const Form = ({ postData }) => {
-  const [errors, setErrors] = useState({});
-
   const [form, setForm] = useState({
     name: "",
     amount: "",
@@ -19,22 +17,9 @@ const Form = ({ postData }) => {
     });
   };
 
-  const formValidate = () => {
-    let err = {};
-    if (!form.name) err.name = "Name is required";
-    if (!form.amount) err.owner_name = "Amount is required";
-    if (!form.category) err.category = "Category is required";
-    return err;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errs = formValidate();
-    if (Object.keys(errs).length === 0) {
-      postData(form);
-    } else {
-      setErrors({ errs });
-    }
+    postData(form);
   };
 
   return (
@@ -116,11 +101,6 @@ const Form = ({ postData }) => {
           Add new item
         </button>
       </form>
-      <div>
-        {Object.keys(errors).map((err, index) => (
-          <li key={index}>{err}</li>
-        ))}
-      </div>
     </>
   );
 };
