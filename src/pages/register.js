@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -87,9 +88,9 @@ export default function Register() {
           Register
         </button>
       </form>
-      <a href="/login" className="block mt-6 text-sm hover:text-green-500">
+      <Link href="/login" className="block mt-6 text-sm hover:text-green-500">
         Already registered? Click here to login
-      </a>
+      </Link>
     </div>
   );
 }

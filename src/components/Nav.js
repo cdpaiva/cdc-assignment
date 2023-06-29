@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Nav = () => {
@@ -12,14 +13,14 @@ const Nav = () => {
 
   return (
     <nav className="flex w-full items-center justify-between p-3 bg-slate-700">
-      <a href="/" className="text-green-500 font-extrabold">
+      <Link href="/" className="text-green-500 font-extrabold">
         Pantry Organizer
-      </a>
+      </Link>
       <div className="flex gap-4">
         {!inDataFetchingExamplePage && (
-          <a href="/countries" className="text-white hover:text-green-500">
+          <Link href="/countries" className="text-white hover:text-green-500">
             Data Fetching Example
-          </a>
+          </Link>
         )}
         <button
           className="text-white hover:text-green-500"

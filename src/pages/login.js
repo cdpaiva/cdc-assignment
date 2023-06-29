@@ -1,4 +1,5 @@
 import Notification from "@/components/Notification";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -77,9 +78,12 @@ export default function Register() {
           Login
         </button>
       </form>
-      <a href="/register" className="block mt-6 text-sm hover:text-green-500">
+      <Link
+        href="/register"
+        className="block mt-6 text-sm hover:text-green-500"
+      >
         Don't have an account? Click here to register
-      </a>
+      </Link>
     </div>
   );
 }
