@@ -20,7 +20,6 @@ export default function Register() {
         setMessage("Could not login");
       } else {
         const data = await res.json();
-        localStorage.setItem("userId", data.userId);
         localStorage.setItem("token", data.token);
         router.push("/pantry");
       }

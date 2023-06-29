@@ -54,7 +54,7 @@ const Form = ({ postData }) => {
           </div>
           <div className="md:w-3/4">
             <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
               name="name"
               value={form.name}
@@ -74,7 +74,7 @@ const Form = ({ postData }) => {
           </div>
           <div className="md:w-3/4">
             <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
               name="amount"
               value={form.amount}
@@ -95,7 +95,7 @@ const Form = ({ postData }) => {
           </div>
           <div className="md:w-3/4">
             <select
-              className="bg-gray-200 border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+              className="bg-gray-200 border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               name="category"
               id="category"
               onChange={handleChange}
@@ -111,7 +111,7 @@ const Form = ({ postData }) => {
 
         <button
           type="submit"
-          className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+          className="shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
         >
           Add new item
         </button>
