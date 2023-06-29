@@ -1,4 +1,4 @@
-const Notification = ({ text, setter, variant }) => {
+const Notification = ({ text, close, variant }) => {
   let divClass;
   if (variant === "info") {
     divClass =
@@ -11,7 +11,7 @@ const Notification = ({ text, setter, variant }) => {
   return (
     <div className={divClass}>
       <span className="font-medium">{text}</span>
-      <button className="ml-auto" onClick={() => setter("")}>
+      <button className="ml-auto" onClick={close}>
         X
       </button>
     </div>

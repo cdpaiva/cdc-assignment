@@ -1,8 +1,9 @@
-export const getAllItems = (token) => {
-  return fetch("/api/pantry", {
+export const getAllItems = async (token) => {
+  const res = await fetch("/api/pantry", {
     method: "GET",
     headers: { authorization: `Bearer ${token}` },
-  }).then((res) => res.json());
+  });
+  return await res.json();
 };
 
 export const createNewItem = async (token, item) => {
@@ -19,9 +20,7 @@ export const createNewItem = async (token, item) => {
   if (!res.ok) {
     throw new Error(res.status);
   }
-  const data = await res.json();
-
-  return data;
+  return await res.json();
 };
 
 export const updateItem = async (id, token, amount) => {

@@ -10,8 +10,11 @@ const Nav = () => {
 
   return (
     <nav className="flex w-full items-center justify-between p-3 bg-slate-700">
-      <p className="text-green-400 font-extrabold">Pantry Organizer</p>
-      <button className="text-white" onClick={handleLogout}>
+      <p className="text-green-500 font-extrabold">Pantry Organizer</p>
+      <button
+        className="text-white hover:text-green-500"
+        onClick={handleLogout}
+      >
         Logout
       </button>
     </nav>

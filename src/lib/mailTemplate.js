@@ -1,4 +1,4 @@
-export default function mailTemplate(username, product) {
+export function htmlMailTemplate(username, product) {
   return `
   <table width="100%">
     <tbody>
@@ -42,4 +42,13 @@ export default function mailTemplate(username, product) {
       </tr>
     </tbody>
   </table>`;
+}
+
+export function textMailTemplate(username, product) {
+  return `
+    Hello ${username},
+
+    You are out of ${product}.
+    Log into you Pantry Manager account to check the new items you must buy.
+  `;
 }

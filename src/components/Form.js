@@ -26,12 +26,12 @@ const Form = ({ postData }) => {
     <>
       <form
         onSubmit={handleSubmit}
-        className="text-black w-full mx-auto max-w-md"
+        className="text-black text-center w-full mx-auto max-w-md"
       >
         <div className="md:flex md:items-center mb-6">
           <div className="md:w-1/4">
             <label
-              className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+              className="block md:text-right mb-1 md:mb-0 pr-4"
               htmlFor="name"
             >
               Name
@@ -51,7 +51,7 @@ const Form = ({ postData }) => {
         <div className="md:flex md:items-center mb-6">
           <div className="md:w-1/4">
             <label
-              className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+              className="block md:text-right mb-1 md:mb-0 pr-4"
               htmlFor="amount"
             >
               Amount
@@ -72,7 +72,7 @@ const Form = ({ postData }) => {
         <div className="md:flex md:items-center mb-6">
           <div className="md:w-1/4">
             <label
-              className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+              className="block md:text-right mb-1 md:mb-0 pr-4"
               htmlFor="category"
             >
               Category
