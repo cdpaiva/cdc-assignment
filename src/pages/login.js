@@ -82,7 +82,7 @@ export default function Register() {
         href="/register"
         className="block mt-6 text-sm hover:text-green-500"
       >
-        Don't have an account? Click here to register
+        Do not have an account? Click here to register
       </Link>
     </div>
   );
