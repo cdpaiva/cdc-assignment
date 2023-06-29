@@ -1,7 +1,15 @@
 import { useState } from "react";
 
 const Form = ({ postData }) => {
-  const [errors, setErrors] = useState({});
+  // empty object in state feels a bit susicious
+  //
+  // You own the complexity of categorizing erorrs, but do not display
+  // errors adjacent to the fields, you just display the list of errors
+  //
+  // We could display the key, so the user knows the field, but that still
+  // does not justify the complexity... let's refactor to reduce the internal
+  // complexity while improving the UX (showing field details)
+  const [errors, setErrors] = useState([]);
 
   const [form, setForm] = useState({
     name: "",
@@ -15,25 +23,20 @@ const Form = ({ postData }) => {
 
     setForm({
       ...form,
+      // good & smart, nice job
       [name]: value,
     });
   };
 
-  const formValidate = () => {
-    let err = {};
-    if (!form.name) err.name = "Name is required";
-    if (!form.amount) err.owner_name = "Amount is required";
-    if (!form.category) err.category = "Category is required";
-    return err;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errs = formValidate();
-    if (Object.keys(errs).length === 0) {
+    const newErrors = [];
+    if (!form.name) newErrors.push("Name is required");
+    if (!form.amount) newErrors.push("Amount is required");
+    if (!form.category) newErrors.push("Category is required");
+    setErrors(newErrors);
+    if (!newErrors.length) {
       postData(form);
-    } else {
-      setErrors({ errs });
     }
   };
 
@@ -59,7 +62,15 @@ const Form = ({ postData }) => {
               name="name"
               value={form.name}
               onChange={handleChange}
+              /* if you want you code to do anything if the field is blank,
+              you can't set this DOM property, because the browser will block
+              submission, and you code never gets a chance
+
+              There are accessibility downsides to ejecting from HTML / DOM
+
               required
+
+              */
             />
           </div>
         </div>
@@ -79,7 +90,6 @@ const Form = ({ postData }) => {
               name="amount"
               value={form.amount}
               onChange={handleChange}
-              required
             />
           </div>
         </div>
@@ -117,8 +127,16 @@ const Form = ({ postData }) => {
         </button>
       </form>
       <div>
-        {Object.keys(errors).map((err, index) => (
-          <li key={index}>{err}</li>
+        {errors.map((err, index) => (
+          <li
+            /* do not use index as key!!! React hits the render cache based on the key you provide,
+          so if the key is a array index, you can get cache hits that are unintentional, and
+          causes the wrong thing to render.
+
+          */ key={err}
+          >
+            {err}
+          </li>
         ))}
       </div>
     </>

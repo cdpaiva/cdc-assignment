@@ -1,62 +1,111 @@
-export const getAllItems = (token) => {
-  return fetch("/api/pantry", {
-    method: "GET",
-    headers: { authorization: `Bearer ${token}` },
-  }).then((res) => res.json());
-};
+import { useState, useEffect } from "react";
 
-export const createNewItem = async (token, item) => {
-  const res = await fetch("/api/pantry", {
+function useFetch(cb, config) {
+  const [data, setData] = useState(null);
+
+  // If we want to use this for POST requests, we probably don't want to
+  // immediately start loading!
+  const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState(false);
+  const triggerRequest = async (...stuff) => {
+    setLoading(true);
+    const response = await cb(...stuff);
+    if (
+      response.ok &&
+      response.headers.get("content-type") === "application/json"
+    ) {
+      const data = await response.json();
+      setData(data);
+      setError(false);
+    } else if (response.ok) {
+      setError("Unexpected content-type");
+      setData(null);
+    } else if (response.headers.get("content-type") === "application/json") {
+      const errData = await response.json();
+      setData(null);
+      setError(errData);
+    } else {
+      setData(null);
+      setError(true);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (config.triggerOnMount) {
+      triggerRequest();
+    }
+  }, []);
+
+  return { data, loading, error };
+}
+
+function getToken() {
+  return "1";
+}
+
+function useGetAllItems() {
+  return useFetch(() =>
+    fetch("/api/pantry", {
+      method: "GET",
+      headers: { authorization: `Bearer ${getToken()}` },
+    })
+  );
+}
+
+export const useCreateNewItem = (item) =>
+  fetch("/api/pantry", {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
+      authorization: `Bearer ${getToken()}`,
     },
     body: JSON.stringify(item),
   });
 
-  if (!res.ok) {
-    throw new Error(res.status);
-  }
-  const data = await res.json();
-
-  return data;
-};
-
-export const updateItem = async (id, token, amount) => {
-  const res = await fetch(`/api/pantry/${id}`, {
+export const useUpdateItem = (id, amount) =>
+  fetch(`/api/pantry/${id}`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
+      authorization: `Bearer ${getToken()}`,
     },
     body: JSON.stringify({ amount }),
   });
 
-  if (!res.ok) {
-    throw new Error(res.status);
-  }
-};
+function Item(props) {
+  const { data, triggerRequest } = useUpdateItem();
+  return (
+    <>
+      <p>Count {data?.amount || props.item.amount}</p>
+      <button
+        onClick={() => {
+          const id = data?.id || props.item.id;
+          const currentCount = data?.amount || props.item.amount;
+          triggerRequest(id, currentCount + 1);
+        }}
+      >
+        Increment Count
+      </button>
+    </>
+  );
+}
 
-export const deleteItem = async (token, id) => {
-  const res = await fetch(`/api/pantry/${id}`, {
+export const useDeleteItem = (id) =>
+  fetch(`/api/pantry/${id}`, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
+      authorization: `Bearer ${getToken()}`,
     },
   });
 
-  if (!res.ok) {
-    throw new Error(res.status);
-  }
-};
-
-export const sendMail = async (token, product) => {
-  const res = await fetch(`/api/sendgrid`, {
+export const useSendMail = (product) =>
+  fetch(`/api/sendgrid`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -65,8 +114,3 @@ export const sendMail = async (token, product) => {
     },
     body: JSON.stringify({ product }),
   });
-
-  if (!res.ok) {
-    throw new Error(res.status);
-  }
-};

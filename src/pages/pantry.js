@@ -10,17 +10,81 @@ import {
   deleteItem,
 } from "@/lib/pantryService";
 
+// function useFetch<T>(cb: () => Response, config: {
+//   /**
+//    * You might want to turn this off for a POST request
+//    */
+//   triggerOnMount: boolean
+// }, { triggerOnMount: true }):
+//   | {
+//       loading: true,
+//       error: unknown | boolean,
+//       data: null,
+//       triggerRequest: () => void,
+//     }
+//   | {
+//       loading: false,
+//       error: false,
+//       data: T,
+//       triggerRequest: () => void,
+//     } {
+//   const [data, setData] = useState(null);
+
+//   // If we want to use this for POST requests, we probably don't want to
+//   // immediately start loading!
+//   const [loading, setLoading] = useState(true);
+
+//   const [error, setError] = useState(false);
+//   const triggerRequest = async () => {
+//     setLoading(true);
+//     const response = await cb();
+//     if (
+//       response.ok &&
+//       response.headers.get("content-type") === "application/json"
+//     ) {
+//       const data = await response.json();
+//       setData(data);
+//       setError(false);
+//     } else if (response.ok) {
+//       setError("Unexpected content-type")
+//       setData(null);
+//     } else if (response.headers.get("content-type") === "application/json")  {
+//       const errData = await response.json();
+//       setData(null);
+//       setError(errData);
+//     } else {
+//       setData(null);
+//       setError(true);
+//     }
+//     setLoading(false);
+//   };
+
+//   useEffect(() => {
+//     if (config.triggerOnMount) {
+//       triggerRequest();
+//     }
+//   }, []);
+
+//   return { data, loading, error }
+// }
+
 function Pantry() {
+  // immediately -- we should useReducer instead!
+  // See https://react.dev/reference/react/useReducer
   const [items, setItems] = useState([]);
   const [token, setToken] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState("");
   const [error, setError] = useState("");
+  const { error, loading, data } = useFetch(() => {
+    
+  }, { triggerOnMount: false });
 
+  // consider `react-query`
   useEffect(() => {
     setLoading(true);
-    const token = localStorage.getItem("token");
+    const token = "yes";
     if (!token) {
       Router.push("/login");
     }
